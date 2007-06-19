@@ -1,13 +1,13 @@
 Summary:	Fcron is a task scheduler
 Name:		fcron
-Version:	3.0.2
+Version:	3.0.3
 Release:	%mkrel 1
 License:	GPL
 Group:		System/Configuration/Other
 URL:		http://fcron.free.fr/
 Source0:	http://fcron.free.fr/archives/%{name}-%{version}.src.tar.gz
 Source1:	%{name}-2.0.0-extra.tar.bz2
-Patch0:		fcron-2.9.7-Makefile.in.diff
+Patch0:		fcron-3.0.3-Makefile.in.diff
 BuildRequires:	pam-devel
 BuildRequires:	sendmail-command
 Requires(post): rpm-helper
@@ -70,14 +70,18 @@ install -d %{buildroot}%{_initrddir}
 install -d %{buildroot}/var/spool/fcron
 install -d %{buildroot}/var/run/fcron
 
-make install \
+yes n | make install \
+    DESTDIR=%{buildroot} \
+    ROOTNAME=`id -un` ROOTGROUP=`id -gn`
+
+%if 0
     ETC=%{buildroot}%{_sysconfdir} \
     DESTBIN=%{buildroot}%{_bindir} \
     DESTSBIN=%{buildroot}%{_sbindir} \
     DESTMAN=%{buildroot}%{_mandir} \
     DESTDOC=%{buildroot}%{_docdir} \
     FCRONTABS=%{buildroot}/var/spool/fcron \
-    ROOTNAME=`id -un` ROOTGROUP=`id -gn`
+%endif
 
 install -m 755 script/sysVinit-launcher %{buildroot}%{_initrddir}/fcron
 install -m 755 convert-fcrontab %{buildroot}%{_bindir}
