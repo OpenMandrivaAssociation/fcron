@@ -17,7 +17,6 @@ Requires(postun): rpm-helper
 Requires:	syslog-daemon
 Requires:	sendmail-command
 BuildConflicts:	libselinux-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
 Fcron is a scheduler. It aims at replacing Vixie Cron, so it implements most
