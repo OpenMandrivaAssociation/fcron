@@ -1,6 +1,6 @@
 Summary:	Fcron is a task scheduler
 Name:		fcron
-Version:	3.0.3
+Version:	3.0.4
 Release:	%mkrel 1
 License:	GPL
 Group:		System/Configuration/Other
