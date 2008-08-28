@@ -1,13 +1,15 @@
 Summary:	Task scheduler
 Name:		fcron
 Version:	3.0.4
-Release:	%mkrel 4
+Release:	%mkrel 5
 License:	GPL
 Group:		System/Configuration/Other
 URL:		http://fcron.free.fr/
 Source0:	http://fcron.free.fr/archives/%{name}-%{version}.src.tar.gz
 Source1:	%{name}-2.0.0-extra.tar.bz2
 Patch0:		fcron-3.0.3-Makefile.in.diff
+# (fc) 3.0.4-5mdv accept fcron.conf file with 644 perms (Fedora)
+Patch1:		fcron-3.0.2-accept_readable_fcron.conf.patch
 BuildRequires:	pam-devel
 BuildRequires:	sendmail-command
 Requires(post): rpm-helper
@@ -16,6 +18,7 @@ Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires:	syslog-daemon
 Requires:	sendmail-command
+Provides:	cron-daemon
 BuildConflicts:	libselinux-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
@@ -36,6 +39,7 @@ even more and better :)) ...
 mv %{name}-2.0.0-extra/fcrontab.example ./
 
 %patch0 -p0
+%patch1 -p0 -b .readable-file
 
 %build
 
