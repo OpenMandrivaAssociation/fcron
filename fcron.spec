@@ -1,7 +1,7 @@
 Summary:	Task scheduler
 Name:		fcron
 Version:	3.0.4
-Release:	%mkrel 5
+Release:	%mkrel 6
 License:	GPL
 Group:		System/Configuration/Other
 URL:		http://fcron.free.fr/
