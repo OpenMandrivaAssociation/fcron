@@ -1,0 +1,97 @@
+Index: Makefile.in
+===================================================================
+--- Makefile.in
++++ Makefile.in	2007-06-19 18:44:23.000000000 +0200
+@@ -133,7 +133,7 @@
+ # needed by boot-install script :
+ 	echo `fcron -V 2>&1 | grep "^fcron "` > PREVIOUS_VERSION && chmod a+rw PREVIOUS_VERSION
+ 
+-	$(SRCDIR)/script/user-group $(USERNAME) $(GROUPNAME) $(ANSWERALL) $(SRCDIR)
++	# $(SRCDIR)/script/user-group $(USERNAME) $(GROUPNAME) $(ANSWERALL) $(SRCDIR)
+ 
+ # check if the directories we use exist, and if not, create them
+ 	if test ! -d $(DESTDIR)$(DESTSBIN); then $(INSTALL) -m 755 -d $(DESTDIR)$(DESTSBIN) ; fi
+@@ -159,45 +159,45 @@
+ perms:
+ # Note : we don't use "chown user:group file" because some systems use ":"
+ #        and others "." as separator.
+-	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN) 
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN) 
+-	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN) 
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTBIN) 
+-	chown $(ROOTNAME) $(DESTDIR)$(ETC) 
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(ETC) 
+-	chown $(ROOTNAME) $(DESTDIR)$(FIFODIR) 
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(FIFODIR) 
+-	chown $(ROOTNAME) $(DESTDIR)$(PIDDIR) 
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(PIDDIR) 
++#	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN) 
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN) 
++#	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN) 
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTBIN) 
++#	chown $(ROOTNAME) $(DESTDIR)$(ETC) 
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(ETC) 
++#	chown $(ROOTNAME) $(DESTDIR)$(FIFODIR) 
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(FIFODIR) 
++#	chown $(ROOTNAME) $(DESTDIR)$(PIDDIR) 
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(PIDDIR) 
+ 
+ # change spool dir mode
+-	chown $(USERNAME) $(DESTDIR)$(FCRONTABS)
+-	chgrp $(GROUPNAME) $(DESTDIR)$(FCRONTABS)
+-	chmod 770 $(DESTDIR)$(FCRONTABS)
++#	chown $(USERNAME) $(DESTDIR)$(FCRONTABS)
++#	chgrp $(GROUPNAME) $(DESTDIR)$(FCRONTABS)
++#	chmod 770 $(DESTDIR)$(FCRONTABS)
+ 
+-	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN)/fcron
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN)/fcron
++#	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN)/fcron
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN)/fcron
+ 	chmod 110 $(DESTDIR)$(DESTSBIN)/fcron
+ 
+-	chown $(USERNAME) $(DESTDIR)$(DESTBIN)/fcrontab
+-	chgrp $(GROUPNAME) $(DESTDIR)$(DESTBIN)/fcrontab
++#	chown $(USERNAME) $(DESTDIR)$(DESTBIN)/fcrontab
++#	chgrp $(GROUPNAME) $(DESTDIR)$(DESTBIN)/fcrontab
+ 	chmod $(BINMODE) $(DESTDIR)$(DESTBIN)/fcrontab
+ 
+-	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN)/fcronsighup
+-	chgrp $(GROUPNAME) $(DESTDIR)$(DESTBIN)/fcronsighup
++#	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN)/fcronsighup
++#	chgrp $(GROUPNAME) $(DESTDIR)$(DESTBIN)/fcronsighup
+ 	chmod $(BINMODESIGHUP) $(DESTDIR)$(DESTBIN)/fcronsighup
+ 
+ ifeq ($(FCRONDYN), 1)
+-	chown $(USERNAME) $(DESTDIR)$(DESTBIN)/fcrondyn
+-	chgrp $(GROUPNAME) $(DESTDIR)$(DESTBIN)/fcrondyn
++#	chown $(USERNAME) $(DESTDIR)$(DESTBIN)/fcrondyn
++#	chgrp $(GROUPNAME) $(DESTDIR)$(DESTBIN)/fcrondyn
+ 	chmod $(BINMODE) $(DESTDIR)$(DESTBIN)/fcrondyn
+ endif
+-	chown $(ROOTNAME) $(DESTDIR)$(ETC)/fcron.allow $(DESTDIR)$(ETC)/fcron.deny
+-	chgrp $(GROUPNAME) $(DESTDIR)$(ETC)/fcron.allow $(DESTDIR)$(ETC)/fcron.deny
++#	chown $(ROOTNAME) $(DESTDIR)$(ETC)/fcron.allow $(DESTDIR)$(ETC)/fcron.deny
++#	chgrp $(GROUPNAME) $(DESTDIR)$(ETC)/fcron.allow $(DESTDIR)$(ETC)/fcron.deny
+ 	chmod 640 $(DESTDIR)$(ETC)/fcron.allow $(DESTDIR)$(ETC)/fcron.deny
+ 
+-	chown $(ROOTNAME) $(DESTDIR)$(ETC)/fcron.conf
+-	chgrp $(GROUPNAME) $(DESTDIR)$(ETC)/fcron.conf
++#	chown $(ROOTNAME) $(DESTDIR)$(ETC)/fcron.conf
++#	chgrp $(GROUPNAME) $(DESTDIR)$(ETC)/fcron.conf
+ 	chmod 640 $(DESTDIR)$(ETC)/fcron.conf
+ ifeq ($(USEPAM), 1)
+ 	$(SRCDIR)/script/install-pam-conf $(SRCDIR) $(DESTDIR)$(ETC) $(ROOTNAME) $(ROOTGROUP) "$(INSTALL)"
+@@ -205,9 +205,9 @@
+ 
+ # in order to get correct rights when upgrading :
+ 
+-	find $(DESTDIR)$(FCRONTABS) -type f \( -name "*.orig" -a ! -name "$(ROOTNAME).orig" -a ! -name "$(SYSFCRONTAB).orig" \) -exec chown $(USERNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 640 {} \;
+-	find $(DESTDIR)$(FCRONTABS) -type f \( -name "$(ROOTNAME).orig" -o -name "$(SYSFCRONTAB).orig" \) -exec chown $(ROOTNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 600 {} \;
+-	find $(DESTDIR)$(FCRONTABS) -type f ! -name "*.orig" -exec chown $(ROOTNAME) {} \; -exec chgrp $(ROOTGROUP) {} \; -exec chmod 600 {} \;
++#	find $(DESTDIR)$(FCRONTABS) -type f \( -name "*.orig" -a ! -name "$(ROOTNAME).orig" -a ! -name "$(SYSFCRONTAB).orig" \) -exec chown $(USERNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 640 {} \;
++#	find $(DESTDIR)$(FCRONTABS) -type f \( -name "$(ROOTNAME).orig" -o -name "$(SYSFCRONTAB).orig" \) -exec chown $(ROOTNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 600 {} \;
++#	find $(DESTDIR)$(FCRONTABS) -type f ! -name "*.orig" -exec chown $(ROOTNAME) {} \; -exec chgrp $(ROOTGROUP) {} \; -exec chmod 600 {} \;
+ 
+ 	make -C doc perms
+ 
