@@ -204,3 +204,69 @@ rm -rf %{buildroot}
 
 
 
+
+
+%changelog
+* Thu Dec 09 2010 Oden Eriksson <oeriksson@mandriva.com> 3.0.4-7mdv2011.0
++ Revision: 618260
+- the mass rebuild of 2010.0 packages
+
+* Thu Sep 03 2009 Thierry Vignaud <tv@mandriva.org> 3.0.4-6mdv2010.0
++ Revision: 428712
+- rebuild
+
+* Thu Aug 28 2008 Frederic Crozat <fcrozat@mandriva.com> 3.0.4-5mdv2009.0
++ Revision: 276876
+- Patch1 (Fedora): accept fcron.conf file with 644 perms
+- Provides cron-daemon virtual package
+
+* Thu Jul 24 2008 Thierry Vignaud <tv@mandriva.org> 3.0.4-4mdv2009.0
++ Revision: 245075
+- rebuild
+
+* Mon Feb 18 2008 Thierry Vignaud <tv@mandriva.org> 3.0.4-2mdv2008.1
++ Revision: 170828
+- rebuild
+- fix "foobar is blabla" summary (=> "blabla") so that it looks nice in rpmdrake
+
+* Sat Feb 09 2008 Olivier Thauvin <nanardon@mandriva.org> 3.0.4-1mdv2008.1
++ Revision: 164550
+- 3.0.4
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Tue Jun 19 2007 Olivier Thauvin <nanardon@mandriva.org> 3.0.3-1mdv2008.0
++ Revision: 41545
+- 3.0.3
+
+
+* Wed Jan 17 2007 David Walluck <walluck@mandriva.org> 3.0.2-1mdv2007.0
++ Revision: 109755
+- 3.0.2
+
+* Sun Aug 06 2006 Olivier Thauvin <nanardon@mandriva.org> 3.0.1-3mdv2007.0
++ Revision: 53341
+- 3.0.1
+- Import fcron
+
+* Thu Aug 03 2006 Oden Eriksson <oeriksson@mandriva.com> 2.9.7-3mdv2007.0
+- prevent linkage to selinux libs
+
+* Sun Jul 31 2005 Oden Eriksson <oeriksson@mandriva.com> 2.9.7-2mdk
+- oops!, forgot to nuke the MailTransportAgent requirement
+
+* Sun Jul 31 2005 Oden Eriksson <oeriksson@mandriva.com> 2.9.7-1mdk
+- 2.9.7
+- fix deps
+- fix the Makefile.in patch
+- drop the gcc34 patch
+- misc spec file fixes
+
+* Sun Oct 31 2004 Christiaan Welvaart <cjw@daneel.dyndns.org> 2.0.1-1mdk
+- 2.0.1
+- patch1: fix build with gcc 3.4
+
