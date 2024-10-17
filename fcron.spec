@@ -4,7 +4,7 @@ Version:	3.0.6
 Release:	2
 License:	GPLv2+
 Group:		System/Configuration/Other
-URL:		http://fcron.free.fr/
+URL:		https://fcron.free.fr/
 Source0:	http://fcron.free.fr/archives/%{name}-%{version}.src.tar.gz
 Source1:	%{name}-2.0.0-extra.tar.bz2
 Patch0:		fcron-3.0.5-Makefile.in.diff
