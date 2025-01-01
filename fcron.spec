@@ -1,24 +1,23 @@
 Summary:	Task scheduler
 Name:		fcron
-Version:	3.0.6
-Release:	2
+Version:	3.3.2
+Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Other
 URL:		https://fcron.free.fr/
 Source0:	http://fcron.free.fr/archives/%{name}-%{version}.src.tar.gz
-Source1:	%{name}-2.0.0-extra.tar.bz2
-Patch0:		fcron-3.0.5-Makefile.in.diff
-# (fc) 3.0.4-5mdv accept fcron.conf file with 644 perms (Fedora)
-Patch1:		fcron-3.0.2-accept_readable_fcron.conf.patch
 BuildRequires:	pam-devel
 BuildRequires:	sendmail-command
 BuildRequires:	vim-minimal
-Requires(post):	systemd
-Requires(pre,preun,post,postun):	rpm-helper
+BuildRequires:	systemd
 Requires:	syslog-daemon
 Requires:	sendmail-command
 Provides:	cron-daemon
 BuildConflicts:	libselinux-devel
+
+%patchlist
+fcron-3.0.5-Makefile.in.diff
+fcron-3.3.2-compile.patch
 
 %description
 Fcron is a scheduler. It aims at replacing Vixie Cron, so it implements most
@@ -32,7 +31,6 @@ In other words, fcron does both the job of Vixie Cron and anacron, but does
 even more and better :)) ...
 
 %files
-%doc fcrontab.example
 %{_initrddir}/fcron
 %attr(640,root,fcron) %config(noreplace) %{_sysconfdir}/fcron.conf
 %attr(640,root,fcron) %config(noreplace) %{_sysconfdir}/fcron.allow
@@ -55,69 +53,17 @@ even more and better :)) ...
 %attr(110,root,root) %{_sbindir}/fcron
 %{_sbindir}/fcron-update-crontabs
 %dir %attr(770,fcron,fcron) /var/spool/fcron
-
-%pre
-# Check now if there is an old ( < 1.1.x ) version of fcrontab on the system.
-echo `fcron -V 2>&1 | grep "^fcron "` > /tmp/PREVIOUS_VERSION
-if [ "$1" = "1" ]; then
-    %_pre_useradd fcron /var/spool/fcron /bin/true
-fi
-
-%post
-%_tmpfilescreate %{name}
-if [ "$1" = "2" ]; then
-    killall -TERM fcron
-    FCRONTABS=/var/spool/fcron
-
-    find ${FCRONTABS} -type f \( -name "*.orig" -a ! -name "root.orig" \) \
-        -exec chown fcron:fcron {} \; -exec chmod 640 {} \;
-    find ${FCRONTABS} -type f -name "root.orig" -exec chown root:fcron {} \; -exec chmod 600 {} \;
-    find ${FCRONTABS} -type f ! -name "*.orig" -exec chown root:root {} \; -exec chmod 600 {} \;
-    [ -f %{_sysconfdir}/fcron.deny ] && chown root:fcron %{_sysconfdir}/fcron.deny
-    [ -f %{_sysconfdir}/fcron.allow ] && chown root:fcron %{_sysconfdir}/fcron.allow
-
-    if test -r "/tmp/PREVIOUS_VERSION"; then
-        MAJOR=`cat /tmp/PREVIOUS_VERSION | awk '{print $2}' | awk -F '.' '{print $1}'`
-        MINOR=`cat /tmp/PREVIOUS_VERSION | awk '{print $2}' | awk -F '.' '{print $2}'`
-    fi
-
-    if test \( "$MAJOR" -lt 1 \) -o \( \( "$MINOR" -lt 1 \) -a "$MAJOR" -eq 1 \); then
-        for FILE in $FCRONTABS/* ; do \
-            if test "$FILE" != "$FCRONTABS/*"; then
-                BASENAME=`basename $FILE` ; \
-                FCRONTAB=`echo "$BASENAME" | \
-                sed "s|.*orig|| ; s|fcrontab.sig|| ; s|rm.*||"` ; \
-                ( test ! -z "$FCRONTAB" && convert-fcrontab $FCRONTAB ) \
-                || echo -n ""; \
-            fi
-        done
-    fi
-fi
-
-%{_initrddir}/fcron start
-%_post_service %{name}
-
-%postun
-if [ "$1" = "0" ]; then
-    # Remove user fcron
-    %_postun_userdel fcron
-fi
-
-%preun
-%_preun_service %{name}
-
+%{_unitdir}/*.service
+%{_sysusersdir}/*.conf
 
 #----------------------------------------------------------------------------
 
 %prep
-%setup -q -T -b 0 -n %{name}-%{version} -a1
-mv %{name}-2.0.0-extra/fcrontab.example ./
-
-%patch0 -p0
-%patch1 -p0 -b .readable-file
+%setup -q -T -b 0 -n %{name}-%{version}
+%autopatch -p1
 
 %build
-%configure2_5x \
+%configure \
 	--with-sendmail=/bin/false \
 	--with-shell=/bin/sh \
 	--with-editor=/bin/vi \
@@ -183,3 +129,7 @@ cat <<EOF > %{buildroot}%{_tmpfilesdir}/%{name}.conf
 d /run/fcron 0755 root root
 EOF
 
+mkdir -p %{buildroot}%{_sysusersdir}
+cat >%{buildroot}%{_sysusersdir}/%{name}.conf <<EOF
+u fcron - "FCron" /var/spool/fcron %{_sbindir}/nologin
+EOF

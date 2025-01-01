@@ -1,6 +1,15 @@
---- Makefile.in	2010-03-01 00:35:50.000000000 +0100
-+++ Makefile.in.oden	2013-11-28 12:17:13.000000000 +0100
-@@ -134,7 +134,7 @@
+diff -up fcron-3.3.2/Makefile.in.1~ fcron-3.3.2/Makefile.in
+--- fcron-3.3.2/Makefile.in.1~	2024-08-25 00:45:47.000000000 +0200
++++ fcron-3.3.2/Makefile.in	2025-01-01 23:11:50.215850639 +0100
+@@ -152,7 +152,6 @@ ifneq ($(SYSTEMD_DIR), no)
+ 	if test ! -d $(DESTDIR)$(SYSTEMD_DIR); then $(INSTALL) -m 755 -d $(DESTDIR)$(SYSTEMD_DIR) ; fi
+ 	$(INSTALL) -m 644 script/fcron.init.systemd $(DESTDIR)$(SYSTEMD_DIR)/fcron.service
+ 	$(INSTALL) -m 644 script/fcron.init.systemd.reboot $(DESTDIR)$(SYSTEMD_DIR)/fcronreboot.service
+-	systemctl daemon-reload
+ endif
+ 
+ install-staged: all
+@@ -160,7 +160,7 @@ install-staged: all
  # needed by boot-install script :
  	echo `fcron -V 2>&1 | grep "^fcron "` > PREVIOUS_VERSION && chmod a+rw PREVIOUS_VERSION
  
@@ -9,44 +18,43 @@
  
  # check if the directories we use exist, and if not, create them
  	if test ! -d $(DESTDIR)$(DESTSBIN); then $(INSTALL) -m 755 -d $(DESTDIR)$(DESTSBIN) ; fi
-@@ -160,45 +160,45 @@
- perms:
+@@ -186,45 +186,45 @@ endif
+ perms: install-staged strip
  # Note : we don't use "chown user:group file" because some systems use ":"
  #        and others "." as separator.
--	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN) 
--	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN) 
--	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN) 
--	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTBIN) 
--	chown $(ROOTNAME) $(DESTDIR)$(ETC) 
--	chgrp $(ROOTGROUP) $(DESTDIR)$(ETC) 
--	chown $(ROOTNAME) $(DESTDIR)$(FIFODIR) 
--	chgrp $(ROOTGROUP) $(DESTDIR)$(FIFODIR) 
--	chown $(ROOTNAME) $(DESTDIR)$(PIDDIR) 
--	chgrp $(ROOTGROUP) $(DESTDIR)$(PIDDIR) 
-+#	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN) 
-+#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN) 
-+#	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN) 
-+#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTBIN) 
-+#	chown $(ROOTNAME) $(DESTDIR)$(ETC) 
-+#	chgrp $(ROOTGROUP) $(DESTDIR)$(ETC) 
-+#	chown $(ROOTNAME) $(DESTDIR)$(FIFODIR) 
-+#	chgrp $(ROOTGROUP) $(DESTDIR)$(FIFODIR) 
-+#	chown $(ROOTNAME) $(DESTDIR)$(PIDDIR) 
-+#	chgrp $(ROOTGROUP) $(DESTDIR)$(PIDDIR) 
+-	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN)
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN)
+-	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN)
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTBIN)
+-	chown $(ROOTNAME) $(DESTDIR)$(ETC)
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(ETC)
+-	chown $(ROOTNAME) $(DESTDIR)$(FIFODIR)
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(FIFODIR)
+-	chown $(ROOTNAME) $(DESTDIR)$(PIDDIR)
+-	chgrp $(ROOTGROUP) $(DESTDIR)$(PIDDIR)
++#	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN)
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN)
++#	chown $(ROOTNAME) $(DESTDIR)$(DESTBIN)
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTBIN)
++#	chown $(ROOTNAME) $(DESTDIR)$(ETC)
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(ETC)
++#	chown $(ROOTNAME) $(DESTDIR)$(FIFODIR)
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(FIFODIR)
++#	chown $(ROOTNAME) $(DESTDIR)$(PIDDIR)
++#	chgrp $(ROOTGROUP) $(DESTDIR)$(PIDDIR)
  
  # change spool dir mode
 -	chown $(USERNAME) $(DESTDIR)$(FCRONTABS)
 -	chgrp $(GROUPNAME) $(DESTDIR)$(FCRONTABS)
--	chmod 770 $(DESTDIR)$(FCRONTABS)
 +#	chown $(USERNAME) $(DESTDIR)$(FCRONTABS)
 +#	chgrp $(GROUPNAME) $(DESTDIR)$(FCRONTABS)
-+#	chmod 770 $(DESTDIR)$(FCRONTABS)
+ 	chmod 770 $(DESTDIR)$(FCRONTABS)
  
 -	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN)/fcron
 -	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN)/fcron
 +#	chown $(ROOTNAME) $(DESTDIR)$(DESTSBIN)/fcron
 +#	chgrp $(ROOTGROUP) $(DESTDIR)$(DESTSBIN)/fcron
- 	chmod 110 $(DESTDIR)$(DESTSBIN)/fcron
+ 	chmod 710 $(DESTDIR)$(DESTSBIN)/fcron
  
 -	chown $(USERNAME) $(DESTDIR)$(DESTBIN)/fcrontab
 -	chgrp $(GROUPNAME) $(DESTDIR)$(DESTBIN)/fcrontab
@@ -80,20 +88,3 @@
  	chmod 640 $(DESTDIR)$(ETC)/fcron.conf
  ifeq ($(USEPAM), 1)
  	$(SRCDIR)/script/install-pam-conf $(SRCDIR) $(DESTDIR)$(ETC) $(ROOTNAME) $(ROOTGROUP) "$(INSTALL)"
-@@ -206,11 +206,11 @@
- 
- # in order to get correct rights when upgrading :
- 
--	find $(DESTDIR)$(FCRONTABS) -type f \( -name "*.orig" -a ! -name "$(ROOTNAME).orig" -a ! -name "$(SYSFCRONTAB).orig" \) -exec chown $(USERNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 640 {} \;
--	find $(DESTDIR)$(FCRONTABS) -type f \( -name "$(ROOTNAME).orig" -o -name "$(SYSFCRONTAB).orig" \) -exec chown $(ROOTNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 600 {} \;
--	# First, remove the potential fcrontab.sig, or it could not get removed by fcronsighup if it becomes root:root 600
--	rm -f $(DESTDIR)$(FCRONTABS)/fcrontab.sig
--	find $(DESTDIR)$(FCRONTABS) -type f ! -name "*.orig" -exec chown $(ROOTNAME) {} \; -exec chgrp $(ROOTGROUP) {} \; -exec chmod 600 {} \;
-+#	find $(DESTDIR)$(FCRONTABS) -type f \( -name "*.orig" -a ! -name "$(ROOTNAME).orig" -a ! -name "$(SYSFCRONTAB).orig" \) -exec chown $(USERNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 640 {} \;
-+#	find $(DESTDIR)$(FCRONTABS) -type f \( -name "$(ROOTNAME).orig" -o -name "$(SYSFCRONTAB).orig" \) -exec chown $(ROOTNAME) {} \; -exec chgrp $(GROUPNAME) {} \; -exec chmod 600 {} \;
-+#	# First, remove the potential fcrontab.sig, or it could not get removed by fcronsighup if it becomes root:root 600
-+#	rm -f $(DESTDIR)$(FCRONTABS)/fcrontab.sig
-+#	find $(DESTDIR)$(FCRONTABS) -type f ! -name "*.orig" -exec chown $(ROOTNAME) {} \; -exec chgrp $(ROOTGROUP) {} \; -exec chmod 600 {} \;
- 
- 	make -C doc perms
- 
