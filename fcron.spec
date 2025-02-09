@@ -8,7 +8,7 @@ URL:		https://fcron.free.fr/
 Source0:	http://fcron.free.fr/archives/%{name}-%{version}.src.tar.gz
 BuildRequires:	pam-devel
 BuildRequires:	sendmail-command
-BuildRequires:	/bin/vi
+BuildRequires:	neovim
 BuildRequires:	systemd
 Requires:	syslog-daemon
 Requires:	sendmail-command
