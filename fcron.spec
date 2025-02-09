@@ -1,6 +1,6 @@
 Summary:	Task scheduler
 Name:		fcron
-Version:	3.3.2
+Version:	3.3.3
 Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Other
@@ -17,7 +17,6 @@ BuildConflicts:	libselinux-devel
 
 %patchlist
 fcron-3.0.5-Makefile.in.diff
-fcron-3.3.2-compile.patch
 
 %description
 Fcron is a scheduler. It aims at replacing Vixie Cron, so it implements most
