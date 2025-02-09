@@ -10,6 +10,7 @@ BuildRequires:	pam-devel
 BuildRequires:	sendmail-command
 BuildRequires:	neovim
 BuildRequires:	systemd
+BuildRequires:	pkgconfig(systemd)
 Requires:	syslog-daemon
 Requires:	sendmail-command
 Provides:	cron-daemon
